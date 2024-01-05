@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const db = require('../db')
+const checkAuth = require('../middleware/checkAuth')
 
 router.get('/', (req, res) => {
   res.render('index', {
@@ -8,7 +9,7 @@ router.get('/', (req, res) => {
   })
 })
 
-router.get('/room/:roomID', async (req, res) => {
+router.get('/room/:roomID', checkAuth, async (req, res) => {
   const roomID = req.params.roomID
   if (!roomID) return res.redirect("/")
   const room = await db.rooms.getByID(roomID)
