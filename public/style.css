@@ -1,0 +1,10 @@
+.no-margin * {
+  margin: 0;
+}
+
+.chat {
+  max-height: 500px; 
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: auto;
+}

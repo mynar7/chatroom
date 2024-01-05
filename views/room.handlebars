@@ -1,0 +1,22 @@
+<h1>Welcome to {{name}}, {{username}}</h1> 
+
+<div class="chat" id="chat">
+  {{#each messages}}
+    <p>
+      <span>{{author}}:</span>
+      {{message}}
+    </p>
+  {{/each}}
+</div>
+
+<form>
+  <label for="message">Send Message: </label>
+  <input type="text" name="message" id="message" autofocus/> 
+  <button>Send</button>
+</form>
+
+<p>
+  <a href="/">Leave Room</a>
+</p>
+
+<script src="/room.js"></script>

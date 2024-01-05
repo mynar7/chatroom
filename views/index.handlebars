@@ -1,0 +1,26 @@
+{{#if isLoggedIn}}
+<h1>Welcome, {{username}}</h1>
+
+<div id="rooms"></div>
+
+<form action="/api/room" method="POST">
+  <label for="roomname">Create Room:</label>
+  <input type="text" name="roomname" id="roomname" autofocus> 
+  <button>Join</button>
+</form>
+
+<p>Want to logout? <a href="/api/logout">Log me out!</a></p>
+
+<script src="index.js"></script>
+
+{{else}}
+
+<h1>My Websocket test!</h1>
+
+<form action="/api/login">
+  <label for="username">Enter Username:</label>
+  <input type="text" name="username" id="username" autofocus> 
+  <button>Login</button>
+</form>
+
+{{/if}}
