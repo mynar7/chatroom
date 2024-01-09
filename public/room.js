@@ -1,39 +1,28 @@
-const protocol = location.protocol === "https:" ? "wss://" : "ws://"
-const ws = new WebSocket(protocol + location.host);
+const ws = io();
 
-ws.onmessage = e => {
-  const {type, data} = JSON.parse(e.data)
-  switch(type) {
-    case 'MESSAGE_TO_CLIENT':
-      const {authorName, message} = data
-      const p = document.createElement('p')
-      p.innerHTML = `<span>${authorName}: </span> ${message}`
-      document.querySelector('#chat').prepend(p)
-      return
-  }
-}
+const roomID = location.pathname.split("/").pop();
 
-ws.onopen = () => {
-  const roomID = location.pathname.split('/').pop()
-  if (!roomID) location.replace('/')
-  ws.send(JSON.stringify({
-    type: "USER_JOINED",
-    data: {
-      roomID,
-    }
-  }))
-}
+ws.on("MESSAGE_TO_CLIENT", (data) => {
+  const { authorName, message } = data;
+  const p = document.createElement("p");
+  p.innerHTML = `<span>${authorName}: </span> ${message}`;
+  document.querySelector("#chat").prepend(p);
+});
 
-document.querySelector('form').onsubmit = function(e) {
-  e.preventDefault()
-  const roomID = location.pathname.split('/').pop()
-  ws.send(JSON.stringify({
-    type: "MESSAGE_TO_SERVER",
-    data: {
-      roomID,
-      message: e.target.message.value
-    }
-  }))
-  e.target.message.value = ""
-}
+ws.on("connect", () => {
+  if (!roomID) return location.replace("/");
+  ws.emit("USER_JOINED", { roomID });
+});
 
+ws.on("disconnect", () => {
+  location.replace("/")
+})
+
+document.querySelector("form").onsubmit = function (e) {
+  e.preventDefault();
+  ws.emit("MESSAGE_TO_SERVER", {
+    roomID,
+    message: e.target.message.value,
+  });
+  e.target.message.value = "";
+};

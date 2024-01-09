@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const db = require("../db");
-const { emitActions } = require("../events");
 const checkAuth = require("../middleware/checkAuth");
 
 router.get("/login", async (req, res) => {
@@ -24,7 +23,7 @@ router.get("/logout", async (req, res) => {
 
 router.post("/room", checkAuth, async (req, res) => {
   const room = await db.rooms.create(req.body.roomname, req.session.userID);
-  req.socketServer.emit(emitActions.ROOM_CREATED);
+  req.io.broadcastRoomsToAllUsers()
   res.redirect("/room/" + room.id);
 });
 

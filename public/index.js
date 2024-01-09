@@ -1,13 +1,6 @@
-const protocol = location.protocol === "https:" ? "wss://" : "ws://"
-const ws = new WebSocket(protocol + location.host);
+const ws = io()
 
-ws.onmessage = (e) => {
-  const { type, data } = JSON.parse(e.data);
-  switch (type) {
-    case "ROOM_LIST":
-      return handleListingRooms(data);
-  }
-};
+ws.on("ROOM_LIST", handleListingRooms)
 
 function handleListingRooms(rooms) {
   if (rooms.length === 0) return;
